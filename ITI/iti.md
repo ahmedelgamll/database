@@ -126,6 +126,11 @@ note:
 -  Coalesce take multiple replacement     
    exchange Null value with any avilable data
 
+``` sql
+select substring (stu_fname,1,3)
+from student 
+
+```
 
 
 `to combine two columns using contact fun`
@@ -164,3 +169,161 @@ i wrote an article about it before:
 ___
 ![16](../ITI/pics/16.png)
 
+___
+____
+____
+___
+### aggregate function:
+![21](../ITI/pics/21.png)
+
+
+**notes:** 
+
+- لو معايا agg fun ,  او اكتر column  > يبقي لازم اعمل grouping علي ال columns دي
+
+
+- agg fun + column = agg feun for each column    
+
+- ال agg funs مبتحسبش ال null values
+
+
+
+- مبعملش group by ولا بال pk ولا ب * عشان دي معناها  (sum,avg,min) for each row  فكدا ملهاش معني 
+
+
+`where :`      
+
+بتاثر علي ال rows بس فبتغير ال values انما مش بتشيل group بالكامل>>>(**select row**)      
+
+
+![25](../ITI/pics/25.png)
+
+
+
+`having:`     
+select group, بتشيل group 
+
+
+![26](../ITI/pics/26.png)
+
+
+- ال  having دايما بتيجي مع ال agg fun بعد ال group
+
+- ال select اخر حاجه في ال query     
+ال where ثم ال group ثم ال having    
+![22](../ITI/pics/22.png)
+
+EX:
+
+عايز داتا من اكتر من table فعملت join    
+![23](../ITI/pics/23.png)
+
+معناها for each dep id for each address     
+![24](../ITI/pics/24.png)
+
+
+
+___
+subqueries:     
+  اخر حاجه افكر فيها عشان بطيئه    
+
+- باخد ال output بتاع query ك input ل query تانيه 
+
+- ال inner query بتتنفذ الاول
+``` sql
+select * 
+from student
+where st_age<select avg(st_age) from student 
+=
+select * 
+from student
+where st_age<23
+```
+
+- ممكن اعمل inner query علي table تاني غير اللي في ال outer query
+
+``` sql
+select dept_name
+from department 
+where dept_id in (select dept_id from student where dept_id is not null)
+
+دا بيجبلي اسامي الاقسام اللي فيها طلبه وكان ممكن تتعمل ب join وكانت هتبقي احسن
+
+select dept_name
+from department d ,student s
+where d.dept_id=s.dept_id
+```
+**subquery + dml**
+``` sql
+امسح من جدول المقررات الطلبه اللي عايشين في القاهره (من جدولين مختلفين)
+delete from stu_course
+where stu_id in (select stu_id from student where stu_address ='cairo' )
+
+```
+___
+**union family:**
+
+`union all:`
+
+بيحط 2 queries ملهمش علاقه ببعض . مع بعض
+
+لازم عدد ال columns في ال select الاولي اد عدد ال columns في ال select التانيه وكمان نفس ال datatype
+-  union gets only the distinct values
+``` sql
+select st_name
+from Students
+union all
+select ins_name
+from Instructors
+
+```
+
+`union:`      
+بترتب وتشيل المتكرر
+
+'بتطلع ال unique'
+- union gets only the distinct values
+
+``` sql
+select st_name
+from Students
+union 
+select ins_name
+from Instructors
+
+```
+
+
+`intersect:`         
+هات المتقاطع بس من الجدولبن
+
+بترتب وتشيل المتكرر
+
+``` sql
+select st_name
+from Students
+intersect 
+select ins_name
+from Instructors
+
+```
+
+
+`except:`     
+ هات الموجوده في الاولي ومش موجوده في التانيه
+
+بترتب وتشيل المتكرر
+
+``` sql
+select st_name
+from Students
+except 
+select ins_name
+from Instructors
+
+```
+
+
+note:
+ 
+ لو مطلوب delet او update شيئ معين والشيئ دا ليه علاقات مع tables تانيه )(موجود في tables تانيه) يبقي لازم اطبق ال qureies دي علي ال tables التانيه لحد اما الشخص دا يختفي من ال tables التانيه وبعد كدا اطبق ال query الاصليه بتاعتي
