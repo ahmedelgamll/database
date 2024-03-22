@@ -653,46 +653,85 @@ DR<=2    ?? اعلي مرتبين في كل قسم مع التكرار
 
 
 ___
-DATA TYPES:
+`DATA TYPES:`
 
+![54](../ITI/pics/54.png)  
+![53](../ITI/pics/55.png)  
+![53](../ITI/pics/56.png)  
+![53](../ITI/pics/57.png)  
+![53](../ITI/pics/58.png)  
 
 
 
 
 ___
-keywords and built in funs
+`keywords and built in funs`
 
-case:
+### case:
 
-  with select:
+  with select:    
+
+![59](../ITI/pics/59.png%20.png)  
 
 
  with update:
 
-لو كانت if , else بس ممكن استخدم iif
+ ![60](../ITI/pics/60.png)  
+
+
+لو كانت if , else بس ممكن استخدم iif:
+
+ ![61](../ITI/pics/61.png)  
+
 
 
 
 
 ___
-بيحولو من data tybe ل datatybe
-convert:       
-cast:
+بيحولو من data tybe ل datatybe      
+convert:         
+cast:    
+
+من date الي string  
+
+ ![62](../ITI/pics/62.png)  
 
 
 
-format :   لو اديتها تاريخ بتحولو لوحدها الي string
-yyyy
-2:2/4/2024       
-4:monday novamber 2020
-3:mon nov 2020
+بس عشان ابقي flexible علي الشكل اللي هعرض بيه هختار ال format      
+
+`format : `     
+
+ لو اديتها تاريخ بتحولو لوحدها الي string   
+
+![63](../ITI/pics/63.png)  
+
+خليها دايما yyyy
+         
+2:2/4/2024            
+4:monday novamber 2020           
+3:mon nov 2020         
 hh:12       
 HH:24          
 tt:pm,am
 
-photo:الاولي بترجعها ك string التانيه بترجعها ك int فعلي حسب هتدخلها في ايه
 
-eomontht(getdate())    31.1.2024
+الاولي بترجعها ك string التانيه بترجعها ك int فعلي حسب هتدخلها في ايه
+
+```sql
+select format (getdate(),'dd')
+select day (getdate())
+
+out:اليوم (17)
+
+```
 بترجع اخر يوم في الشهر
-
-select format (eomontht(getdate()),'dd')    31
+emonth
+``` sql
+eomontht(getdate()) 
+   31.1.2024
+```   
+``` sql
+select format (eomontht(getdate()),'dd')
+    31
+```
