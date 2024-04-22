@@ -326,7 +326,9 @@ from Instructors
 
 note:
  
- لو مطلوب delet او update شيئ معين والشيئ دا ليه علاقات مع tables تانيه )(موجود في tables تانيه) يبقي لازم اطبق ال qureies دي علي ال tables التانيه لحد اما الشخص دا يختفي من ال tables التانيه وبعد كدا اطبق ال query الاصليه بتاعتي
+ لو مطلوب delet او update شيئ معين والشيئ دا ليه علاقات مع tables تانيه (موجود في tables تانيه) يبقي لازم اطبق ال qureies دي علي ال tables التانيه لحد اما الشخص دا يختفي من ال tables التانيه وبعد كدا اطبق ال query الاصليه بتاعتي
+ 
+ يعني مثلا قبل ممسح موظف من employee  لازم اروح الاول dependent وامسح عيلته واروح department وامسحه من القسم اللي شفال فيه وهكذا ثم في الاخر خالص امسحه
 
  ___
  ___
@@ -383,14 +385,12 @@ to allow remotly connecting on the server >>
 لازم اتاكد ان المود بتاع ال authentication>>  (sql server and windwos)
 
 (مش بس للي دخل علي ال windows عشان مينفعش ادخل حد علي ال windwos بتاعي)
-- ssql server,right click,properties,security>> (sql server and windwos)
-- right clic,restart
-- security,login , right click,new login
+- sql server,right click,properties,security>> (sql server and windwos)
+- right clic,restart the server
+- security,login , right click,new login,put login name and password , remove enforce
     - ![35](../ITI/pics/35.png)
   
-![36](../ITI/pics/36.png)   
 
-واكتب في ال server name ال ip بتاع ال  servere
 
 هو كدا دخل علي ال server بس ميعرفش يشوف اي داتا بيز فلازم احوله من login الي user:
 
@@ -401,7 +401,25 @@ to allow remotly connecting on the server >>
 ![37](../ITI/pics/37.png)   
 
 وبكدا ال db adminstrator يقدر يعمل لكل developer :  
- user علشان يقدر يدحل علي السيرفر
+ user علشان يقدر يدحل علي السيرفر    
+
+واكتب في ال server name ال ip بتاع ال  servere
+
+ ![36](../ITI/pics/36.png)   
+
+ طب انا دلوقتي عايز اديله access علي schema معينه اعمل ايه 
+ ``` sql 
+create schema hr
+alter schema hr transfer student
+```
+كدا عملت schema ونقلت عليها بعض ال tables ناقص اربطهم ببعض (اربط ال user اللي انا عملته بال schema )
+
+database,security,schemas,my schema ,double click on it ,permissions ,search ,browse,select the user i want ,(grant,deney)
+
+ال permisions اللي هديهالك : grant           
+اللي همنعها عنك :deney
+
+في الاخر بقي اconnect بال user اللي انا عامله واعمل علي الداتابيز new query
 ___
 ![38](../ITI/pics/38.png)   
 
@@ -544,12 +562,15 @@ where 1=2
 
 وممكن اخد داتا من table احطها في table تانيه          
 insert based on select           
+ 
+لازم يكون ال table اللي بتعمله insert موجود ومفهوش غير ال columns اللي انت هتضفها
+
 ``` sql
 insert into table3
 select fname 
 from student
-لازم يكون ال table اللي بتعمله insert موجود ومفهوش غير ال columns اللي انت هتضفها
-```
+
+```    
 
 ممكن اعمل having من غير group by لو ال select فيهاا agg fun بس من غير column
 كان ال table is one group وبعمل عليه having
@@ -582,7 +603,7 @@ business اللي اتكلمت عنها دلوقتي
 ![43](../ITI/pics/43.png)    
 
 RN = 3  ??  تالت اعلي موظف     
-DR<=2    ?? اعلي مرتبين مع التكرار
+DR<=2    ?? اعلي مرتبين مع التكرار         
 g=1    ??          اول group 
 
 
@@ -600,7 +621,7 @@ g=1    ??          اول group
 هاتلي بيانات اكبر موظف مع التكرار     
 طلع في اتنين ليهم نفس العمر 
 
-![45](../ITI/pics/45.png)    
+![45](../ITI/pics/46.png)    
 
 
 
@@ -735,3 +756,202 @@ eomontht(getdate())
 select format (eomontht(getdate()),'dd')
     31
 ```
+___
+___
+___
+___
+![65](../ITI/pics/65.png)  
+
+
+لما باجي اعمل table جديد والداتا بيز كلها عموما بتبقي مخزنه في files علي ال disk 
+    ف by default في file group بيبقي علي ال sql  بيبقي pointer لل physical files  اللي اتخزنت علي ال disk 
+    
+
+والصح اني ارمي ال different files of the database on different hard-disks to improve the performance بحيث ان ال ال disk بيقرا sequential ف انا احطهم علي disks مختلفه عشان يقراهم parallel
+
+وكمان عشان لما اجي اعمل backup يبقي اسهل عشان هعمل backup علي ال filegroup اللي عليه ال tables اللي انا عدلتها بس مش هعمل backup للداتابيز كلها   لذلك لو عندي 2 tables بعمل بينهم joins كتير ف احطهم علي differnt disks
+
+**Replication:**    
+
+ احط الداتا علي اكتر من server
+
+
+`summary:`     
+
+وانت بتعمل داتابيز تحطها علي كذا physical files          
+ وبتعمل file groups تبدا توزع عليه ال physical files دي              
+ لذلك لما اجي اعمل create tables بتروح علي files مختلفه انا اللي اخترها بنفسي          
+
+ ![65](../ITI/pics/66.png)  
+![65](../ITI/pics/67.png)  
+![65](../ITI/pics/68.png)  
+
+
+`column properties:`  
+**identity:**        
+
+بيبدا هو بقيمه ويعملها increment
+
+,**default value** ,    
+
+**is sparce:**              
+
+ميحجزش مكان لل value لو كانت null,
+
+
+**computed column** :(for derevin attribute)
+1. fomula
+2. is presisted:  عايز اخزنه علي ال disk ولا يبقي في ال runtime بس
+
+
+`relationship properties:`  
+**insert and update specification**:
+
+في العادي مينفعش اعمل delet , update ل column ليه child فدلوقتي اقدر اخليه ينفع
+
+**on delete: set null**
+
+لو محست حاجه في ال parent يحطها null في ال child
+
+مثلا لو عايز امسح قسم معين بس اخلي الموظفين موجودين
+
+
+**on delete: set default**
+
+لو مسحت حاجه في ال parent  يحطلها default value  في ال child
+
+لو اللي بمسحه دا foreign key يبقي لازم احطله default value في ال column properties يعني مثلا امسحلي قسم رقم 10 وحطلي الموظفين بتوعه في قسم 1
+
+
+
+**on delete: cascade**
+
+مثلا لو عايز امسح قسم معين بلموظفين اللي قيه
+
+
+
+
+**on update: cascade**
+
+اي تعديل في ال parent يتعدل تلقائي في ال child
+____
+`schema`: logical grouping of tables        
+
+اقدر اعمل 2 tables ليهم نفس الاسم                 
+وبردو اقدر ا access user علي schema كامله
+
+![69](../ITI/pics/69.png)  
+
+
+default schema : dbo 
+
+دي اللي مش شرط اكتب اسم ال schema وانا ب select حاجه منها علي عكس اس schema تانيه لازم اسم ال schema . table name
+
+``` sql 
+create schema hr
+alter schema hr transfer student
+```
+
+``` sql 
+create synonym he
+for (schema name)hhjh.yugyugyuguy(table name)
+عملت shortcut
+
+select * from he
+```
+
+![70](../ITI/pics/70.png)  
+
+delete :support where ,slower,can retreive the data                                      
+truncate no                          
+___
+في 3 حاجات لازم اعملهم علي كل table الداتا بيز عشان اضمن ان الداتا بيز دي سليمه
+
+![71](../ITI/pics/71.png)  
+
+``` sql 
+create table dept 
+(
+dept_id int primary key,
+dname varchar(20),
+)
+
+create table emp
+(
+eid int  identity(1,1),
+ename varchar(20),
+eadd varchar(20) default'alex',
+hierdate date default getdate(),
+salary int unique,
+overtime int,
+netsal as ( isnull(salary,0) + isnull(overtime,0) ) persisted,
+Bd date,
+age as (year(getdate())-year(Bd)), 
+gender varchar(1),
+hour_rate int not null,
+did int 
+constraint c1 primary key(eid,ename),
+constraint c2 unique(overtime),
+constraint c3 check (salary >10000),
+constraint c4 check (salary >10000),
+constraint c5 check (eadd in ('cairo','mansoura','alex')),
+constraint c6 check (gender='m'or gender ='f'),
+constraint c7 foreign key (did) references dept(dept_id)
+     on delete set null  on update cascade
+)
+
+alter table emp add constraint c100 check (hour_rate>100)
+
+
+alter table emp drop constraint c2
+
+```
+ال consraint لازم بيكون بيحقق الداتا الجديده والقديمه
+
+طب لو انا عايز :
+
+1. constraint---> new data
+2. constraint---> shared between some tables 
+3. datatype    --   constraint  --  default
+
+عن طريق ال `rule`:
+
+هي بديل لل check constraint
+ال rule بتبقي علي مستوي الداتابيز مش بس مستوي ال table , وكمان مينفعش اطبقي اكتر من rule علي column واحد عشان بيبقي مربوط ب datatype
+``` sql 
+create rule r1 as @x>1000
+
+sp_bindrule r1, 'instructor.salary'
+sp_bindrule r1, 'emp.overtime'
+```
+وعشان اشيل ال rule:
+
+``` sql 
+sp_unbindrule  'instructor.salary'
+sp_unbindrule  'emp.overtime'
+drop rule r1
+```
+
+وكمان ممكن اعمل نفس الفكره علي ال default:
+
+``` sql 
+create default d1 as 1000
+
+sp_bindefault d1, 'instructor.salary'
+
+sp_unbindefault  'instructor.salary'
+drop default d1
+```
+
+``` sql 
+--- create new data type ---> complex(int    >1000    default=5000)
+create rule r1 as @x>1000
+create default d1 as 5000
+sp_addtype complex,'int'
+
+
+sp_bindrule r1, complex
+sp_bindefault d1, complex
+```
+
+
